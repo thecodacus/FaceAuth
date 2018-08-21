@@ -1,0 +1,167 @@
+{% extends 'recognition/base.html'%}
+{% block head %}
+<style type="text/css">
+	.main-panel .content {
+	    padding: 80px 30px 30px 80px;
+	    min-height: calc(100vh - 70px);
+	}
+	#container {
+	    margin: 0px auto;
+	    width: 500px;
+	    height: 375px;
+	    border: 10px #333 solid;
+	}
+	.canvasFrame {
+	    width: 80%;
+	    max-height: 240px;
+	    background-color: #666;
+	    border: 10px #333 solid;
+	}
+	#videoElement{
+		width: 100%;
+		
+	}
+	.hidden{
+		display: none;
+	}
+	#canvasOutput{
+		margin: auto;
+	}
+</style>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col-md-4 offset-md-4">
+		<div class="row">
+			<div class="card">
+			    <div class="card-header text-center" style="padding: 20px;">
+					<h5 class="title">Log in</h5>
+					<div class="canvasFrame" style="width:100%; text-align: center; overflow: hidden;">
+						<video autoplay="true" class="hidden" id="videoElement"></video>
+						<canvas height="240" width="320" id="canvasOutput"></canvas>
+					</div>
+			    </div>
+			    <div class="card-body">
+			    	<div class="row">
+			    		<div class="col-md-10" id="videoFrameContainer" style="margin:0 auto; width: 100%; text-align:center;"></div>
+			    	</div>
+					<form id="loginForm" class="hidden">
+						{% include 'recognition/form-template.html' %}
+					</form>
+					
+			    </div>
+			    <div class="card-footer offset-md-2 ">
+			      	<button type="submit" id="btnFormLogin" class="btn btn-fill btn-primary hidden">Login</button>
+			      	<button  id="btnFaceLogin" class="btn btn-fill btn-primary">Login</button>
+			      	<a  href="{% url 'recognition:register' %}" class="btn btn-fill btn-primary">Register</a>
+			    </div>
+			    <div class="row">
+			    	<div class="col-md-11" style="text-align: right; padding-bottom: 10px;">
+	    		     	<a id="usePassword" href="#">face login not working? use passowrd</a>
+	    				<a id="useFace" class="hidden" href="#">use Face Auth</a>
+			    	</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block footerScript %}
+{% load staticfiles%}
+<script type="text/javascript">
+	var video = document.querySelector("#videoElement");
+	if (navigator.mediaDevices.getUserMedia) {       
+	    navigator.mediaDevices.getUserMedia({video: true})
+	  .then(function(stream) {
+	    video.srcObject = stream;
+	  })
+	  .catch(function(err0r) {
+	    console.log("Something went wrong!");
+	  });
+	}
+</script>
+<script src="{% static 'recognition' %}/js/opencv.js" type="text/javascript"></script>
+<script src="{% static 'recognition' %}/js/utils.js"  type="text/javascript"></script>
+<script src="{% static 'recognition' %}/js/facedetect.js" onload="opencvIsReady()" type="text/javascript"></script>
+<script type="text/javascript"></script>
+<script>
+	document.querySelector("#btnFaceLogin").addEventListener("click", function(event){
+	    event.preventDefault()
+	    faceLogin()
+	});
+	document.querySelector("#useFace").addEventListener("click", function(event){
+	    event.preventDefault()
+	    $("#useFace").addClass('hidden')
+	    $("#btnFormLogin").addClass('hidden')
+	    $("#loginForm").addClass('hidden')
+	    
+	    $("#usePassword").removeClass('hidden')
+	    $("#btnFaceLogin").removeClass('hidden')
+	    
+	});
+	document.querySelector("#usePassword").addEventListener("click", function(event){
+	    event.preventDefault()
+	    $("#usePassword").addClass('hidden')
+	    $("#btnFaceLogin").addClass('hidden')
+	    
+	    $("#useFace").removeClass('hidden')
+	    $("#btnFormLogin").removeClass('hidden')
+	    $("#loginForm").removeClass('hidden')
+	    
+	});
+	function faceLogin(argument) {
+		if(facedetect){
+			captureFrame(5)
+		}
+		else{
+			// display no face detected in UI
+			console.log("no face detected")
+		}
+	}
+	function captureFrame(counter) {
+		var container = document.querySelector("#videoFrameContainer");
+		var canvas = document.createElement('canvas');
+		var video = document.querySelector("#videoElement");
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		canvas.style.width=String(video.videoWidth/10)+"px";
+		canvas.style.height=String(video.videoHeight/10)+"px";
+		canvas.style.zIndex = 8;
+		canvas.style.border = "1px solid";
+		var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        container.appendChild(canvas);
+        if(counter>1){
+        	setTimeout(function(){
+        		captureFrame(counter-1)
+        	}, 200);
+        }
+	}
+	function authenticate(){
+		var container = document.querySelector("#videoFrameContainer");
+		var canva = container.childNodes;
+		var imgData={}
+		var i=0
+		canva.forEach(function(canvas){
+			i=i+1;
+		    imgData['img-'+String(i)]=canvas.toDataURL();
+		});
+		$.ajax({
+		  type: "POST",
+		  url: "{% url 'recognition:api-auth' %}",
+		  data: imgData
+		}).done(function(response) {
+		  console.log('saved'); 
+		  // If you want the file to be visible in the browser 
+		  // - please modify the callback in javascript. All you
+		  // need is to return the url to the file, you just saved 
+		  // and than put the image in your browser.
+		});
+	}
+</script>
+{% endblock%}
