@@ -1,7 +1,7 @@
-<<<<<<< HEAD
 savedModel/
 
 .DS_Store
+
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -107,4 +107,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
->>>>>>> 59bfb76cb8939ec4ae6f94fd0131e6bca78e3e1b

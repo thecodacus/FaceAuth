@@ -1,7 +1,8 @@
 version: '3'
 services:
   face-auth:
-    build: ./FaceRecogEngine/
+    image: anirbankar21/faceauth_face-auth-django
+    
     depends_on:
       - model-server
     command: python manage.py runserver 0.0.0.0:8000
@@ -12,7 +13,7 @@ services:
     links: 
       - "model-server:face-recog-model-server"
   model-server:
-    build: ./FaceRecogModelServer/
+    image: anirbankar21/faceauth_model-server
     command: tensorflow_model_server --port=8500 --rest_api_port=8501 --model_name=${MODEL_NAME} --model_base_path=${MODEL_BASE_PATH}/${MODEL_NAME}
     volumes:
       - ./FaceRecogModelServer/:/app
