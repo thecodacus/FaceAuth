@@ -115,7 +115,7 @@
 	    
 	});
 	function faceLogin(argument) {
-		if(facedetect){
+		if(faceDetected){
 			captureFrame(5)
 		}
 		else{
@@ -141,22 +141,29 @@
         		captureFrame(counter-1)
         	}, 200);
         }
+        else{
+        	authenticate();
+        }
 	}
 	function authenticate(){
 		var container = document.querySelector("#videoFrameContainer");
 		var canva = container.childNodes;
-		var imgData={}
-		var i=0
+		var imgData=[]
 		canva.forEach(function(canvas){
-			i=i+1;
-		    imgData['img-'+String(i)]=canvas.toDataURL();
+		    imgData.push(canvas.toDataURL());
 		});
 		$.ajax({
 		  type: "POST",
 		  url: "{% url 'recognition:api-auth' %}",
-		  data: imgData
+		  data: {
+		  	'imgs[]':imgData,
+		  	csrfmiddlewaretoken: '{{ csrf_token }}'
+		  }
 		}).done(function(response) {
-		  console.log('saved'); 
+		  console.log(response); 
+		  if (response.status=="success"){
+		  	window.location = "/";
+		  }
 		  // If you want the file to be visible in the browser 
 		  // - please modify the callback in javascript. All you
 		  // need is to return the url to the file, you just saved 

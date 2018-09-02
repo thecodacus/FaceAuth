@@ -7,12 +7,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
-from .forms import UserLoginForm, UserRegForm, UserFaceRegForm
+from .forms import UserLoginForm, UserRegForm, UserFaceRegForm, UserEditForm, UserProfileForm
 
 from .utils import Base64ToNpImage, TensorflowBridge, Recognizer
 
@@ -21,19 +21,17 @@ from django.http import JsonResponse
 
 import pickle
 # Create your views here.
-@login_required
-def Home(request):
-	return render(request,'recognition/home.html',{})
-
-def Login(request):
-	return render(request,'recognition/login.html',{})
-
-class Auth(APIView):
+@method_decorator(login_required, name='get')
+class Home(View):
 	def get(self,request):
-		return Response({'message':'use post request to use the auth api'})
+		return render(request,'recognition/home.html')
 
-	def post(self,request):
-		return Response({'message':'use post request to use the auth api'})
+
+class LogoutView(View):
+	def get(self,request):
+		logout(request)
+		return redirect('recognition:home')
+
 
 
 class UserLoginView(View):
@@ -103,7 +101,7 @@ class UserRegistrationView(View):
 @method_decorator(login_required, name='post')
 class UserFaceRegView(View):
 	form_class=UserFaceRegForm
-	template_name='recognition/reg-face.html'
+	template_name='recognition/settings/reg-face.html'
 	base64ToNpImage= Base64ToNpImage()
 	tfBridge=TensorflowBridge()
 	recogzr=Recognizer()
@@ -129,7 +127,59 @@ class UserFaceRegView(View):
 			self.recogzr.train(User.objects.all())
 			return JsonResponse({'status':'success'}, status=201) 
 
+class UserFaceLogInView(APIView):
+	base64ToNpImage= Base64ToNpImage()
+	tfBridge=TensorflowBridge()
+	recogzr=Recognizer()
+	
+	def post(self,request):
+		data = request.POST.getlist('imgs[]')
+		images= self.base64ToNpImage.decodeArray(data)
+		faces = self.tfBridge.imagesToFaces(images,(160,160))
+		# return err if no face found
+		if len(faces)==0:
+			return JsonResponse({'status':'failed', 'msg':'No face detected'}, status=201) 
+		else:
+			ppFaces=self.tfBridge.preprocessFaces(faces)
+			embedded=self.tfBridge.embeddFaces(ppFaces)
+			
+			userIds=self.recogzr.predict(embedded)
+			try:
+				user = User.objects.get(id=userIds[0])
+				# login without password
+				user.backend = 'django.contrib.auth.backends.ModelBackend'
+				login(request, user)
+				return JsonResponse({'status':'success'}, status=201) 
+			except  User.DoesNotExist:
+			   	#handle the case when the user does not exist. 
+			   	return JsonResponse({'status':'failed', 'msg':'user does not exist'}, status=201) 
+				
 
+
+@method_decorator(login_required, name='get')
+@method_decorator(login_required, name='post')
+class ProfileSettingsView(UpdateView):
+	"""docstring for ProfileSettingsView"""
+	form_class=UserFaceRegForm
+	template_name='recognition/settings/profile.html'
+
+	def get(self,request):
+		user_form = UserEditForm(instance=request.user)
+		profile_form = UserProfileForm(instance=request.user.profile)
+		return render(request, self.template_name, {
+		'user_form': user_form,
+		'profile_form': profile_form})
+
+	def post(self,request):
+		user_form = UserEditForm(request.POST, instance=request.user)
+		profile_form = UserProfileForm(request.POST, instance=request.user.profile)
+		if user_form.is_valid() and profile_form.is_valid():
+			user_form.save()
+			profile_form.save()
+			messages.success(request, _('Your profile was successfully updated!'))
+			return redirect('recognition:edit-profile')
+		else:
+			messages.error(request, _('Please correct the error below.'))
 
 # login without password
 # user.backend = 'django.contrib.auth.backends.ModelBackend'

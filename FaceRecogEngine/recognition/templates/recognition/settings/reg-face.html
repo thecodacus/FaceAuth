@@ -131,9 +131,7 @@ User Settings
 		}
 		var canva = container.childNodes;
 		var imgData=[]
-		var i=0;
 		canva.forEach(function(canvas){
-			i=i+1;
 		    imgData.push(canvas.toDataURL());
 		});
 		$.ajax({

@@ -149,7 +149,10 @@ class Recognizer():
 		labels=[]
 		signatureSamples=[]
 		for user in users:
-			signatures=pickle.loads(user.facesignature.signatures)
+			if user.facesignature.signatures=="" or user.facesignature.signatures is None:
+				continue
+
+			signatures=pickle.loads(eval(user.facesignature.signatures))
 			for signature in signatures:
 				labels.append(user.id)
 				signatureSamples.append(signature)
@@ -158,9 +161,24 @@ class Recognizer():
 		# open a file, where you ant to store the data
 		file = open(os.path.join(settings.BASE_DIR, 'assets/knnModel.pkl'), 'wb')
 		# dump information to that file
-		pickle.dump((self.classifier), file)
+		pickle.dump(self.classifier, file)
 		# close the file
 		file.close()
+
+
+	def predict(self,embeddFaces):
+		# open a file, where you ant to store the data
+		file = open(os.path.join(settings.BASE_DIR, 'assets/knnModel.pkl'), 'rb')
+		# dump information to that file
+		classifier=pickle.load(file)
+		# close the file
+		file.close()
+
+		labels=classifier.predict(embeddFaces)
+		print (labels)
+		return labels
+
+
 
 		
 

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from .models import FaceSignature
+from .models import FaceSignature, UserProfile
 
 class UserRegForm(forms.ModelForm):
 	password=forms.CharField(widget=forms.PasswordInput)
@@ -12,6 +12,11 @@ class UserRegForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+class UserEditForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ('email',)
 
 class UserLoginForm(forms.ModelForm):
 	password=forms.CharField(widget=forms.PasswordInput)
@@ -27,3 +32,10 @@ class UserFaceRegForm(forms.ModelForm):
 	class Meta:
 		model = FaceSignature
 		fields={}
+
+class UserProfileForm(forms.ModelForm):
+	"""docstring for UserProfileForm"""
+	class Meta:
+		model = UserProfile
+		fields = ('photo','firstname','lastname','website','bio','phone','city','country','organization')
+		
