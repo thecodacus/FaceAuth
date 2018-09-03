@@ -2,7 +2,7 @@ version: '3'
 services:
   face-auth:
     image: anirbankar21/faceauth_face-auth-django
-    
+    build: FaceRecogEngine/
     depends_on:
       - model-server
     command: python manage.py runserver 0.0.0.0:8000

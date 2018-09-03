@@ -27,6 +27,14 @@
         opacity: 100;
         position: inherit;
         height: auto;
+      }
+      .sidebar .nav li:first-child>a, .off-canvas-sidebar .nav li:first-child>a, .sidebar .nav li>a, .off-canvas-sidebar .nav li>a{
+          margin: 0 0px;
+      }
+      .sidebar .nav li.active>a:before, .off-canvas-sidebar .nav li.active>a:before {
+          top: 12px;
+          left: -17px;
+      }
   </style>
   
   {% block head %}
@@ -34,6 +42,7 @@
 
   {% url 'recognition:home' as urlHome %}
   {% url 'recognition:reg-face' as urlRegFace %}
+  {% url 'recognition:edit-profile' as urlEditProfile %}
 
 </head>
 
@@ -63,9 +72,14 @@
               <i class="fa fa-cogs" aria-hidden="true"></i>
               <p>Settings</p>
             </a>
-            <ul class="collapse" id="submenu1" style="list-style: none;">
+            <ul class="collapse" id="submenu1" style="list-style-type: circle;">
+              <li class="{% ifequal request.path urlEditProfile %}active{% endifequal %}">
+                <a href="{% url 'recognition:edit-profile' %}" style="padding-top:2px; padding-bottom:2px;">
+                  <p>Profile</p>
+                </a>
+              </li>
               <li class="{% ifequal request.path urlRegFace %}active{% endifequal %}" >
-                <a href="{% url 'recognition:reg-face' %}">
+                <a href="{% url 'recognition:reg-face' %}" style="padding-top:2px; padding-bottom:2px;">
                   <p>Register Face</p>
                 </a>
               </li>
@@ -164,7 +178,7 @@
                     <a href="{% url 'recognition:home' %}" class="nav-item dropdown-item">Profile</a>
                   </li>
                   <li class="nav-link">
-                    <a href="{% url 'recognition:reg-face' %}" class="nav-item dropdown-item">Settings</a>
+                    <a href="{% url 'recognition:edit-profile' %}" class="nav-item dropdown-item">Settings</a>
                   </li>
                   <div class="dropdown-divider"></div>
                   <li class="nav-link">

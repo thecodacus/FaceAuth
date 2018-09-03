@@ -36,35 +36,36 @@
 <div class="row">
 	<div class="col-md-4 offset-md-4">
 		<div class="row">
-			<div class="card">
-			    <div class="card-header text-center" style="padding: 20px;">
-					<h5 class="title">Log in</h5>
-					<div class="canvasFrame" style="width:100%; text-align: center; overflow: hidden;">
-						<video autoplay="true" class="hidden" id="videoElement"></video>
-						<canvas height="240" width="320" id="canvasOutput"></canvas>
-					</div>
-			    </div>
-			    <div class="card-body">
-			    	<div class="row">
-			    		<div class="col-md-10" id="videoFrameContainer" style="margin:0 auto; width: 100%; text-align:center;"></div>
-			    	</div>
-					<form id="loginForm" class="hidden" action="" method="post" enctype="multipart/form-data">
-						{% include 'recognition/form-template.html' %}
-					</form>
-					
-			    </div>
-			    <div class="card-footer offset-md-2 ">
-			      	<button type="submit" id="btnFormLogin" class="btn btn-fill btn-primary hidden">Login</button>
-			      	<button  id="btnFaceLogin" class="btn btn-fill btn-primary">Login</button>
-			      	<a  href="{% url 'recognition:register' %}" class="btn btn-fill btn-primary">Register</a>
-			    </div>
-			    <div class="row">
-			    	<div class="col-md-11" style="text-align: right; padding-bottom: 10px;">
-	    		     	<a id="usePassword" href="#">face login not working? use passowrd</a>
-	    				<a id="useFace" class="hidden" href="#">use Face Auth</a>
-			    	</div>
-			    </div>
-			</div>
+			<form  action="{% url 'recognition:login' %}" method="post" enctype="multipart/form-data">
+				<div class="card">
+				    <div class="card-header text-center" style="padding: 20px;">
+						<h5 class="title">Log in</h5>
+						<div class="canvasFrame" style="width:100%; text-align: center; overflow: hidden;">
+							<video autoplay="true" class="hidden" id="videoElement"></video>
+							<canvas height="240" width="320" id="canvasOutput"></canvas>
+						</div>
+				    </div>
+				    <div class="card-body">
+				    	<div class="row">
+				    		<div class="col-md-10" id="videoFrameContainer" style="margin:0 auto; width: 100%; text-align:center;"></div>
+				    	</div>
+						<div id="loginForm" class="hidden">
+							{% include 'recognition/form-template.html' %}
+						</div>
+				    </div>
+				    <div class="card-footer offset-md-2 ">
+				      	<button type="submit" id="btnFormLogin" class="btn btn-fill btn-primary hidden">Login</button>
+				      	<button  id="btnFaceLogin" class="btn btn-fill btn-primary">Login</button>
+				      	<a  href="{% url 'recognition:register' %}" class="btn btn-fill btn-primary">Register</a>
+				    </div>
+				    <div class="row">
+				    	<div class="col-md-11" style="text-align: right; padding-bottom: 10px;">
+		    		     	<a id="usePassword" href="#">face login not working? use passowrd</a>
+		    				<a id="useFace" class="hidden" href="#">use Face Auth</a>
+				    	</div>
+				    </div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

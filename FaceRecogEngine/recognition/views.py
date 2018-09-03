@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 
@@ -36,34 +37,36 @@ class LogoutView(View):
 
 
 class UserLoginView(View):
-	form_class=UserLoginForm
+	form_class=AuthenticationForm
 	template_name='recognition/login.html'
 
 	def get(self,request):
 		form=self.form_class(None)
+		messages.success(request, '')
 		return render(request,self.template_name,{'form':form})
 	
 	def post(self,request):
-		form= self.form_class(request.POST)
+		form=self.form_class(data=request.POST)
 
 		if form.is_valid():
-			user=form.save(commit=False)
 			# clean normalize data
 			username=form.cleaned_data['username']
 			password=form.cleaned_data['password']
-			user.set_password(password)
-			user.save()
-
+			print(username,password)
 			#return if credentials are correct
 
 			user=authenticate(username=username,password=password)
+			print(user)
 
 			if user is not None:
 				if user.is_active:
 					login(request, user)
 					#TODO Redirect to Face Registration pageß
 					return redirect('recognition:home')
-		print('something is wrong')
+			else:
+				messages.error(request,'Invalid Username/Password')
+		else:
+			messages.error(request,'error')
 		return render(request,self.template_name,{'form':form})
 
 class UserRegistrationView(View):

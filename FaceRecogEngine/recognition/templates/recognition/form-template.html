@@ -6,7 +6,8 @@
 </ul>
 {% endif %}
 {% load widget_tweaks %}
-{% for field in form%}
+{% csrf_token %}
+{% for field in form %}
 <div class="row">
   <div class="col-sm-10 offset-sm-1" >
     <div class="form-group">
