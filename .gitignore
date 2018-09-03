@@ -1,5 +1,6 @@
 savedModel/
-
+*.pkl
+*.sqlite3
 .DS_Store
 
 =======
