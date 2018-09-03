@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # upload size max
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
@@ -131,5 +135,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 # login URLS
 LOGIN_URL='/login/'
 LOGIN_REDIRECT_URL='home'
+
+
 
 

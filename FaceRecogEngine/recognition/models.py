@@ -30,7 +30,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='profile',on_delete=models.CASCADE)
 	firstname=models.CharField(max_length=100, default='', blank=True)
 	lastname=models.CharField(max_length=100, default='', blank=True)
-	photo = models.FileField(null=True, blank=True)
+	photo = models.ImageField(null=True, blank=True)
 	website = models.URLField(default='', blank=True)
 	bio = models.TextField(default='', blank=True)
 	phone = models.CharField(max_length=20, blank=True, default='')

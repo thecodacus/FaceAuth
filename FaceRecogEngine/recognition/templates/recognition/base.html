@@ -22,6 +22,12 @@
   <script type="text/javascript">
     var classifierUrl="{% static 'recognition/assets' %}/haarcascade_frontalface_default.xml"  
   </script>
+  <style>
+    .form-group input[type=file] {
+        opacity: 100;
+        position: inherit;
+        height: auto;
+  </style>
   
   {% block head %}
   {% endblock%}
@@ -142,7 +148,11 @@
               <li class="dropdown nav-item">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                   <div class="photo">
+                    {% if user.profile.photo %}
+                    <img class="avatar" src="{{ user.profile.photo.url }}" alt="...">
+                    {% else %}
                     <img src="../assets/img/anime3.png">
+                    {% endif %}
                   </div>
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">

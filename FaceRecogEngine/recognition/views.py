@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 
 from .forms import UserLoginForm, UserRegForm, UserFaceRegForm, UserEditForm, UserProfileForm
@@ -171,16 +172,17 @@ class ProfileSettingsView(UpdateView):
 		'profile_form': profile_form})
 
 	def post(self,request):
-		user_form = UserEditForm(request.POST, instance=request.user)
-		profile_form = UserProfileForm(request.POST, instance=request.user.profile)
+		user_form = UserEditForm(request.POST or None, request.FILES or None, instance=request.user)
+		profile_form = UserProfileForm(request.POST or None, request.FILES or None, instance=request.user.profile)
 		if user_form.is_valid() and profile_form.is_valid():
 			user_form.save()
 			profile_form.save()
-			messages.success(request, _('Your profile was successfully updated!'))
+			messages.success(request, 'Your profile was successfully updated!')
 			return redirect('recognition:edit-profile')
 		else:
-			messages.error(request, _('Please correct the error below.'))
-
+			messages.error(request,'Please correct the error below.')
+		
+		return render(request, self.template_name, {'user_form': user_form, 'profile_form': profile_form})
 # login without password
 # user.backend = 'django.contrib.auth.backends.ModelBackend'
 # login(request, user)

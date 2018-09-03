@@ -4,14 +4,9 @@ from .models import FaceSignature, UserProfile
 
 class UserRegForm(forms.ModelForm):
 	password=forms.CharField(widget=forms.PasswordInput)
-	password.widget.attrs.update({'class': 'form-control'})
 	class Meta:
 		model = User
 		fields = ('username','email','password')
-		widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'})
-        }
 
 class UserEditForm(forms.ModelForm):
 	class Meta:
@@ -24,9 +19,6 @@ class UserLoginForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('username','password')
-		widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-        }
 
 class UserFaceRegForm(forms.ModelForm):
 	class Meta:
