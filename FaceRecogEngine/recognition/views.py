@@ -42,7 +42,7 @@ class UserLoginView(View):
 
 	def get(self,request):
 		form=self.form_class(None)
-		messages.success(request, '')
+		messages.info(request, '')
 		return render(request,self.template_name,{'form':form})
 	
 	def post(self,request):
@@ -52,11 +52,10 @@ class UserLoginView(View):
 			# clean normalize data
 			username=form.cleaned_data['username']
 			password=form.cleaned_data['password']
-			print(username,password)
+
 			#return if credentials are correct
 
 			user=authenticate(username=username,password=password)
-			print(user)
 
 			if user is not None:
 				if user.is_active:
@@ -112,6 +111,7 @@ class UserFaceRegView(View):
 
 	def get(self,request):
 		form=self.form_class(None)
+		messages.info(request, '')
 		return render(request,self.template_name)
 	
 	def post(self,request):
@@ -170,6 +170,7 @@ class ProfileSettingsView(UpdateView):
 	def get(self,request):
 		user_form = UserEditForm(instance=request.user)
 		profile_form = UserProfileForm(instance=request.user.profile)
+		messages.info(request, '')
 		return render(request, self.template_name, {
 		'user_form': user_form,
 		'profile_form': profile_form})

@@ -29,5 +29,5 @@ class UserProfileForm(forms.ModelForm):
 	"""docstring for UserProfileForm"""
 	class Meta:
 		model = UserProfile
-		fields = ('photo','firstname','lastname','website','bio','phone','city','country','organization')
+		fields = ('firstname','lastname','website','bio','phone','photo','city','country','organization')
 		

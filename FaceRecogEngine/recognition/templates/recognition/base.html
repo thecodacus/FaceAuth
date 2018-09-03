@@ -158,9 +158,12 @@
                   </li>
                 </ul>
               </li>
-              
+              <li class="dropdown nav-item">
+                <p style="display:inline">Hi {{ user.profile.firstname }}</p>
+              </li>
               <li class="dropdown nav-item">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+
                   <div class="photo">
                     {% if user.profile.photo %}
                     <img class="avatar" src="{{ user.profile.photo.url }}" alt="...">
