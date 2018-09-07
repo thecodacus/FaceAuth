@@ -5,7 +5,7 @@ services:
     build: FaceRecogEngine/
     depends_on:
       - model-server
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py makemigrations --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./FaceRecogEngine/:/app
     ports:
