@@ -125,13 +125,12 @@
 	    
 	});
 	function faceLogin(argument) {
-		var btnLogin = document.querySelector("#btnFaceLogin")
-		if (btnLogin.classList.contains("disabled")){
-			return
-		}
-		btnLogin.classList.add("disabled")
-
 		if(faceDetected){
+			var btnLogin = document.querySelector("#btnFaceLogin");
+			if (btnLogin.classList.contains("disabled")){
+				return;
+			}
+			btnLogin.classList.add("disabled");
 			captureFrame(5)
 		}
 		else{
