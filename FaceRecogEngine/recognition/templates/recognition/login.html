@@ -32,6 +32,9 @@
 
 {% block sidebar %}
 {% endblock %}
+
+{% block title %}{% block pagetitle %}Log In{% endblock %}{% endblock %}
+
 {% block body %}
 <div class="row">
 	<div class="col-md-4 offset-md-4">
@@ -47,6 +50,12 @@
 				    </div>
 				    <div class="card-body">
 				    	<div class="row">
+				    		<div style="margin: 0 auto; width: 100%; text-align: center;">
+				    			<label style="font-size: 15px; font-weight: 600; color: white; font-family: monospace;" id="lblStatus"></label>
+				    		</div>
+				    		<div id="trainLoader" class="hidden" style="margin: 0 auto; width: 100%; text-align: center;">
+				    			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+				    		</div>
 				    		<div class="col-md-10" id="videoFrameContainer" style="margin:0 auto; width: 100%; text-align:center;"></div>
 				    	</div>
 						<div id="loginForm" class="hidden">
@@ -116,6 +125,12 @@
 	    
 	});
 	function faceLogin(argument) {
+		var btnLogin = document.querySelector("#btnFaceLogin")
+		if (btnLogin.classList.contains("disabled")){
+			return
+		}
+		btnLogin.classList.add("disabled")
+
 		if(faceDetected){
 			captureFrame(5)
 		}
@@ -148,11 +163,18 @@
 	}
 	function authenticate(){
 		var container = document.querySelector("#videoFrameContainer");
+		var status = document.querySelector("#lblStatus");
 		var canva = container.childNodes;
 		var imgData=[]
 		canva.forEach(function(canvas){
 		    imgData.push(canvas.toDataURL());
 		});
+
+		var loader = document.querySelector("#trainLoader");
+		container.classList.add("hidden");
+		loader.classList.remove("hidden");
+		status.innerHTML="Recognizing"
+		status.classList.add("glow");
 		$.ajax({
 		  type: "POST",
 		  url: "{% url 'recognition:api-auth' %}",
@@ -162,8 +184,13 @@
 		  }
 		}).done(function(response) {
 		  console.log(response); 
+		  
+		  var btnLogin = document.querySelector("#btnFaceLogin")
+		  btnLogin.classList.remove("disabled")
+
 		  if (response.status=="success"){
 		  	window.location = "/";
+
 		  }
 		  // If you want the file to be visible in the browser 
 		  // - please modify the callback in javascript. All you

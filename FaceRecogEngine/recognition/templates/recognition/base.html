@@ -19,6 +19,7 @@
   <!-- CSS Files -->
   <link href="{% static 'recognition' %}/css/bootstrap.min.css" rel="stylesheet" />
   <link href="{% static 'recognition' %}/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+  <link href="{% static 'recognition' %}/css/style.css" rel="stylesheet" />
   <script type="text/javascript">
     var classifierUrl="{% static 'recognition/assets' %}/haarcascade_frontalface_default.xml"  
   </script>
@@ -159,7 +160,7 @@
                 </ul>
               </li>
               <li class="dropdown nav-item">
-                <p style="display:inline">Hi {{ user.profile.firstname }}</p>
+                <p style="white-space: nowrap; padding-top: 10px;padding-bottom: 5px;">Hi {{ user.profile.firstname }}</p>
               </li>
               <li class="dropdown nav-item">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -190,7 +191,7 @@
                 </ul>
               </li>
               {% else %}
-                  <p>Welcome, new user. Please log in.</p>
+                  <p style="white-space: nowrap; padding-top: 10px;padding-bottom: 5px;" >log in.</p>
               {% endif %}
               <li class="separator d-lg-none"></li>
             </ul>
