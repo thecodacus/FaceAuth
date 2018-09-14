@@ -8,7 +8,7 @@ Login Screen Open           |  Login Screen Recognizing
 
 Training Screen Open            |  Training Screen Training
 :-------------------------:|:-------------------------:
-![Training Screen Open](screenshots/3.png?raw=true) |  [Training Screen Training](screenshots/4.png?raw=true)
+![Training Screen Open](screenshots/3.png?raw=true) |  ![Training Screen Training](screenshots/4.png?raw=true)
 
 
 
