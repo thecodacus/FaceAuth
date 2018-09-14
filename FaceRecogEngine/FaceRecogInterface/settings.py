@@ -136,6 +136,13 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 LOGIN_URL='/login/'
 LOGIN_REDIRECT_URL='home'
 
+# modelPath
+
+DLMODEL_ROOT = os.path.join(BASE_DIR, 'DLModels')
+
+
+# dlib initialize models;
+
 
 
 

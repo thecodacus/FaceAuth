@@ -16,7 +16,7 @@ from django.contrib import messages
 
 from .forms import UserLoginForm, UserRegForm, UserFaceRegForm, UserEditForm, UserProfileForm
 
-from .utils import Base64ToNpImage, TensorflowBridge, Recognizer
+from .utils import Base64ToNpImage, TensorflowBridge, Recognizer, DlibBridge
 
 from django.http import JsonResponse
 
@@ -106,7 +106,7 @@ class UserFaceRegView(View):
 	form_class=UserFaceRegForm
 	template_name='recognition/settings/reg-face.html'
 	base64ToNpImage= Base64ToNpImage()
-	tfBridge=TensorflowBridge()
+	tfBridge=DlibBridge()
 	recogzr=Recognizer()
 
 	def get(self,request):
@@ -128,12 +128,12 @@ class UserFaceRegView(View):
 			request.user.facesignature.signatures=pickle.dumps(embedded)
 			request.user.facesignature.face=data[0]
 			request.user.save()
-			self.recogzr.train(User.objects.all())
+			self.recogzr.train(User.objects.all(),fn=128)
 			return JsonResponse({'status':'success'}, status=201) 
 
 class UserFaceLogInView(APIView):
 	base64ToNpImage= Base64ToNpImage()
-	tfBridge=TensorflowBridge()
+	tfBridge=DlibBridge()
 	recogzr=Recognizer()
 	
 	def post(self,request):
@@ -146,10 +146,17 @@ class UserFaceLogInView(APIView):
 		else:
 			ppFaces=self.tfBridge.preprocessFaces(faces)
 			embedded=self.tfBridge.embeddFaces(ppFaces)
-			
+			print(type(embedded))
 			userIds=self.recogzr.predict(embedded)
+			if(len(userIds)==0):
+				return JsonResponse({'status':'failed','msg':'User not recognized'}, status=201) 
 			try:
 				user = User.objects.get(id=userIds[0])
+
+				dist = self.recogzr.getDistance(embedded,user)
+				print(dist);
+				if(dist>0.40):
+					return JsonResponse({'status':'failed','msg':'User not recognized'}, status=201) 
 				# login without password
 				user.backend = 'django.contrib.auth.backends.ModelBackend'
 				login(request, user)

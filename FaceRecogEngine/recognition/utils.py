@@ -9,6 +9,8 @@ import requests
 import json
 import pickle
 
+from django.conf import settings
+
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler 
 
@@ -145,21 +147,28 @@ class Recognizer():
 	def __init__(self):
 		self.classifier = KNeighborsClassifier(n_neighbors=3)
 
-	def train(self,users):
+	def train(self,users,fn=512):
 		labels=[]
 		signatureSamples=[]
+
 		for user in users:
 			if user.facesignature.signatures=="" or user.facesignature.signatures is None:
 				continue
 
 			signatures=pickle.loads(eval(user.facesignature.signatures))
 			for signature in signatures:
+				print(len(signature))
+				if(len(signature)!=fn):
+					continue
 				labels.append(user.id)
 				signatureSamples.append(signature)
 
 		self.classifier.fit(signatureSamples,labels)
 		# open a file, where you ant to store the data
-		file = open(os.path.join(settings.BASE_DIR, 'assets/knnModel.pkl'), 'wb')
+
+		classifierModel='assets/knnModel-'+str(fn)+'.pkl'
+
+		file = open(os.path.join(settings.BASE_DIR, classifierModel), 'wb')
 		# dump information to that file
 		pickle.dump(self.classifier, file)
 		# close the file
@@ -167,8 +176,13 @@ class Recognizer():
 
 
 	def predict(self,embeddFaces):
+		fn=len(embeddFaces[0])
+		classifierModel='assets/knnModel-'+str(fn)+'.pkl'
+
+		if not os.path.exists(os.path.join(settings.BASE_DIR, classifierModel)):
+			return []
 		# open a file, where you ant to store the data
-		file = open(os.path.join(settings.BASE_DIR, 'assets/knnModel.pkl'), 'rb')
+		file = open(os.path.join(settings.BASE_DIR, classifierModel), 'rb')
 		# dump information to that file
 		classifier=pickle.load(file)
 		# close the file
@@ -178,9 +192,58 @@ class Recognizer():
 		print (labels)
 		return labels
 
+	def getDistance(self,embeddFaces,user):
+		userSignetures=pickle.loads(eval(user.facesignature.signatures))
+		dist=0
+		for signature in userSignetures:
+			for embeddFace in embeddFaces:
+				dist+=np.linalg.norm(np.array(signature)-np.array(embeddFace))
+		if dist!=0:
+			dist=dist/(len(embeddFaces)*len(userSignetures))
+		return dist
 
 
-		
+class DlibBridge():
+	def __init__(self):
+		print('dlib model initializing...')
+		import dlib
+		self.detector = dlib.get_frontal_face_detector()
+		self.predictor = dlib.shape_predictor(os.path.join(settings.DLMODEL_ROOT,"shape_predictor_68_face_landmarks 2.dat"))
+		self.faceSignatureGenerator=dlib.face_recognition_model_v1(os.path.join(settings.DLMODEL_ROOT,"dlib_face_recognition_resnet_model_v1.dat"))
+		print('dlib model initialized')
+
+	def imagesToFaces(self,images,shape):
+		finalFaces=[]
+		for img in images:
+			gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+			faces = self.detector(gray,2)
+			area=0
+			finalFace=None
+			for face in faces:
+				x = face.left()
+				y = face.top()
+				w = face.right() - x
+				h = face.bottom() - y
+				if(w*h>area):
+					area=w*h
+					finalFace=face
+			if(area==0):
+				continue
+			#saving the captured face in the dataset folder
+			finalFaces.append([img,finalFace]);
+		return finalFaces
+
+	def preprocessFaces(self,faces):
+		return faces
+
+	def embeddFaces(self,faces):
+		embeded=[]
+		for i in range(len(faces)):
+			shape=self.predictor(faces[i][0],faces[i][1])
+			signature=list(self.faceSignatureGenerator.compute_face_descriptor(faces[i][0],shape))
+			embeded.append(signature)
+		return embeded
+
 
 
 
