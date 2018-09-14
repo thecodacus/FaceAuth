@@ -11,24 +11,14 @@ Training Screen Open            |  Training Screen Training
 ![Training Screen Open](screenshots/3.png?raw=true) |  ![Training Screen Training](screenshots/4.png?raw=true)
 
 
-
-!
-
-# Getting Started
-clone the repository and run the following command to start it up
-```shell
-$ git clone https://github.com/thecodacus/FaceAuth.git
-$ cd FaceAuth
-$ docker-compose up
-```
-
-
-### Prerequisites
+# Prerequisites
 
 This code is comes with a two docker repositories and will require them to deploy it.
 check the docker installation [instruction](https://docs.docker.com/install/)
 
-### Deployment
+
+
+# Deployment
 clone the repository and run the following command to start it up
 ```shell
 $ git clone https://github.com/thecodacus/FaceAuth.git
@@ -36,7 +26,7 @@ $ cd FaceAuth
 $ docker-compose up
 ```
 
-## Authors
+# Authors
 
 * **Anirban Kar** - *live work* - [anirbankar.ai](http://anirbankar.ai)
 
