@@ -5,7 +5,7 @@ services:
     build: FaceRecogEngine/
     depends_on:
       - model-server
-    command: bash -c "python manage.py makemigrations --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "mkdir -p ./DLModels/ && cp /DLModels/* ./DLModels/ && python manage.py makemigrations --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./FaceRecogEngine/:/app
     ports:
@@ -14,6 +14,7 @@ services:
       - "model-server:face-recog-model-server"
   model-server:
     image: anirbankar21/faceauth_model-server
+    build: FaceRecogModelServer/
     command: tensorflow_model_server --port=8500 --rest_api_port=8501 --model_name=${MODEL_NAME} --model_base_path=${MODEL_BASE_PATH}/${MODEL_NAME}
     volumes:
       - ./FaceRecogModelServer/:/app
