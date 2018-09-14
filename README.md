@@ -4,11 +4,11 @@ Face Authentication Web Application using django opencv.js and tensorflow.
 # Screen Shots
 Login Screen Open           |  Login Screen Recognizing
 :-------------------------:|:-------------------------:
-![Login Screen Open](screenshots/1.png?raw=true) |  ![Login Screen Recognizing](screenshots/1.png?raw=true)
+![Login Screen Open](screenshots/1.png?raw=true) |  ![Login Screen Recognizing](screenshots/2.png?raw=true)
 
 Training Screen Open            |  Training Screen Training
 :-------------------------:|:-------------------------:
-![Training Screen Open](screenshots/1.png?raw=true) |  [Training Screen Training](screenshots/1.png?raw=true)
+![Training Screen Open](screenshots/3.png?raw=true) |  [Training Screen Training](screenshots/4.png?raw=true)
 
 
 
