@@ -1,5 +1,6 @@
 # FaceAuth
-Face Authentication Web Application using django opencv.js and tensorflow.
+FaceAuth  Is a Face authentication Web demo to add face login system to your django web application.
+using django, opencv.js ,dlib and tensorflow/tenserflow serving, 
 
 # Screen Shots
 Login Screen Open           |  Login Screen Recognizing
