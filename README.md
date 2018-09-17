@@ -1,6 +1,6 @@
 # FaceAuth
 FaceAuth  Is a Face authentication Web demo to add face login system to your django web application.
-using django, opencv.js ,dlib and tensorflow/tenserflow serving, 
+using django, opencv.js ,dlib and tensorflow/tenserflow serving, check the [demo](http://anirbankar.ai)
 
 # Screen Shots
 Login Screen Open           |  Login Screen Recognizing
@@ -28,7 +28,6 @@ $ docker-compose up
 ```
 
 # Authors
-
 * **Anirban Kar** - *live work* - [anirbankar.ai](http://anirbankar.ai)
 
 # License
