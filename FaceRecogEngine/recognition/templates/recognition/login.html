@@ -143,9 +143,10 @@
 			// display no face detected in UI
 			var container = document.querySelector("#videoFrameContainer");
 			var loader = document.querySelector("#trainLoader");
+			var status = document.querySelector("#lblStatus");
 			
 			container.classList.add("hidden");
-			loader.classList.remove("hidden");
+			loader.classList.add("hidden");
 			
 			status.innerHTML="no face detected"
 			console.log("no face detected")
@@ -210,8 +211,8 @@
 		  	var container = document.querySelector("#videoFrameContainer");
 			var loader = document.querySelector("#trainLoader");
 
-			btnLogin.classList.add("disabled");
 			container.classList.remove("hidden");
+			loader.classList.add("hidden");
 		  	status.innerHTML=response.msg
 		  }
 		});
