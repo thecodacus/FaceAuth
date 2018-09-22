@@ -155,7 +155,7 @@ class UserFaceLogInView(APIView):
 
 				dist = self.recogzr.getDistance(embedded,user)
 				print(dist);
-				if(dist>0.5):
+				if(dist>0.4):
 					return JsonResponse({'status':'failed','msg':'User not recognized'}, status=201) 
 				# login without password
 				user.backend = 'django.contrib.auth.backends.ModelBackend'
