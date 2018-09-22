@@ -207,6 +207,11 @@
 		  	window.location = "/";
 		  }
 		  else{
+		  	var container = document.querySelector("#videoFrameContainer");
+			var loader = document.querySelector("#trainLoader");
+
+			btnLogin.classList.add("disabled");
+			container.classList.remove("hidden");
 		  	status.innerHTML=response.msg
 		  }
 		});
