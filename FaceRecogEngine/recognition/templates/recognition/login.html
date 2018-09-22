@@ -130,11 +130,24 @@
 			if (btnLogin.classList.contains("disabled")){
 				return;
 			}
+			var container = document.querySelector("#videoFrameContainer");
+			var loader = document.querySelector("#trainLoader");
+
 			btnLogin.classList.add("disabled");
+			container.classList.remove("hidden");
+			loader.classList.add("hidden");
+
 			captureFrame(1)
 		}
 		else{
 			// display no face detected in UI
+			var container = document.querySelector("#videoFrameContainer");
+			var loader = document.querySelector("#trainLoader");
+			
+			container.classList.add("hidden");
+			loader.classList.remove("hidden");
+			
+			status.innerHTML="no face detected"
 			console.log("no face detected")
 		}
 	}
@@ -142,6 +155,9 @@
 		var container = document.querySelector("#videoFrameContainer");
 		var canvas = document.createElement('canvas');
 		var video = document.querySelector("#videoElement");
+		
+		
+
 		canvas.width = video.videoWidth;
 		canvas.height = video.videoHeight;
 		canvas.style.width=String(video.videoWidth/10)+"px";
