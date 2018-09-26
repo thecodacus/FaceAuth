@@ -24,7 +24,7 @@ clone the repository and run the following command to start it up
 ```shell
 $ git clone https://github.com/thecodacus/FaceAuth.git
 $ cd FaceAuth
-$ docker-compose up
+$ docker-compose -f docker-compose.yml -f docker-compose.production.yml up
 ```
 
 # Authors
